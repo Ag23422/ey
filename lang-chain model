@@ -1,0 +1,33 @@
+# app.py
+from flask import Flask, request, jsonify
+from langchain import OpenAI
+from langchain.chains import LLMChain
+from langchain.prompts import PromptTemplate
+
+app = Flask(__name__)
+
+# Initialize the OpenAI model
+llm = OpenAI(api_key='YOUR_OPENAI_API_KEY')  # Replace with your OpenAI API key
+
+# Create a prompt template
+prompt_template = PromptTemplate(
+    input_variables=["user_input"],
+    template="You are a helpful assistant. Answer the following question: {user_input}"
+)
+
+# Create a language chain
+chain = LLMChain(llm=llm, prompt=prompt_template)
+
+# Function to get a response from the model
+def get_response(user_input):
+    response = chain.run(user_input)
+    return response
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    user_input = request.json.get('message')
+    response = get_response(user_input)
+    return jsonify({'response': response})
+
+if __name__ == '__main__':
+    app.run(debug=True)
