@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language and Level Selection - Vittagya</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-color: #f3f4f6; /* Light gray background */
+        }
+
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+        }
+
+        .chatbot-header {
+            background-color: #2563eb; /* Tailwind blue-600 */
+            color: white;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .chatbot-messages {
+            max-height: 200px; /* Set a max height for the messages area */
+            overflow-y: auto; /* Enable scrolling */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            margin: 0; /* Remove margin */
+        }
+
+        .message {
+            margin: 5px 0;
+            padding: 8px; /* Add padding to messages */
+            border-radius: 5px; /* Rounded corners for messages */
+        }
+
+        .user-message {
+            text-align: right;
+            background-color: #d1e7dd; /* Light green background for user messages */
+            color: #0f5132; /* Dark green text for user messages */
+        }
+
+        .chatbot-message {
+            text-align: left;
+            background-color: #cfe2ff; /* Light blue background for chatbot messages */
+            color: #1c3f95; /* Dark blue text for chatbot messages */
+        }
+
+        .hidden {
+            display: none; /* Class to hide elements */
+        }
+
+        .taskbar {
+            background-color: #2563eb;
+            color: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .taskbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: color 0.3s, background-color 0.3s;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+
+        .taskbar a.active {
+            background-color: #93c5fd; /* Light blue background */
+            color: #2563eb; /* Blue text for active link */
+        }
+
+        .taskbar a:hover {
+            background-color: #93c5fd; /* Light blue background on hover */
+            color: #2563eb;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <header class="bg-blue-600 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Vittagya</h1>
+            <div class="flex items-center space-x-4">
+                <select id="languageSelect" class="bg-white text-black p-2 rounded">
+                    <option value="en">English</option>
+                    <option value="es">Assamese</option>
+                    <option value="fr">Bengali</option>
+                    <option value="fr">Bodo</option>
+                    <option value="fr">Dogiri</option>
+                    <option value=" fr">Gujarati</option>
+                    <option value="fr">Hindi</option>
+                    <option value="fr">Kannada</option>
+                    <option value="fr">Kashmiri</option>
+                    <option value="fr">Konkani</option>
+                    <option value="fr">Maithili</option>
+                    <option value="fr">Malayalam</option>
+                    <option value="fr">Marathi</option>
+                    <option value="fr">Meitei</option>
+                    <option value="fr">Nepali</option>
+                    <option value="fr">Odia</option>
+                    <option value="fr">Punjabi</option>
+                    <option value="fr">Santali</option>
+                    <option value="fr">Sindhi</option>
+                    <option value="fr">Tamil</option>
+                    <option value="fr">Telugu</option>
+                    <option value="fr">Urdu</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <div class="taskbar">
+        <a href="#" onclick="setActive('finance')">Finance</a>
+        <a href="#" onclick="setActive('budgeting')">Budgeting</a>
+        <a href="#" onclick="setActive('investment')">Investment</a>
+        <a href="#" onclick="setActive('banking')">Banking</a>
+        <a href="#" onclick="setActive('community')">Community</a>
+        <a href="#" onclick="setActive('about')">About Us</a>
+    </div>
+
+    <main class="container mx-auto p-4">
+        <div class="flex flex-col items-center justify-center min-h-screen space-y-8">
+            <h1 class="text-7xl font-bold mb-8 text-gray-900">Select Your Preferences</h1>
+            <select id="levelSelect" class="w-full max-w-md p-4 border border-gray-300 rounded bg-white text-gray-900">
+                <option value="">Select A Level based on your Knowledge about Finance</option>
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+            </select>
+            <div class="w-full max-w-2xl space-y-6">
+                <button class="btn w-full" onclick="window.location.href='second.html'">Proceed</button>
+                <button class="btn w-full" onclick="window,location.href='index.html'">Go Back</button>
+            </div>
+        </div>
+    </main>
+
+    <div class="chatbot-container" id="chatbotContainer">
+        <div class="chatbot-header" onclick="toggleChatbot()">
+            <h2 class="text-lg font-semibold">Chatbot</h2>
+            <span id="minimize-icon">−</span>
+        </div>
+        <div id="chatbotMessages" class="chatbot-messages">
+            <!-- Chat messages will appear here -->
+        </div>
+        <div id="chatbotInputContainer" class="chatbot-input">
+            <div class="flex space-x-2">
+                <input type="text" id="chatbotInput" class="flex-grow p-2 border border-gray-300 rounded bg-white text-gray-900" placeholder="Type your message...">
+                <button onclick="sendMessage()" class="bg-blue-500 text-white px-4 py-2 rounded">Send</button>
+                <button id="voice-icon" aria-label="Voice Command">
+                    <img src="Screenshot 2025-01-12 140113.png" alt="Voice Icon" />
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        function proceed() {
+            const language = document.getElementById('languageSelect').value;
+            const level = document.getElementById('levelSelect').value;
+            if (language && level) {
+                console.log(`Language: ${language}, Level: ${level}`);
+                navigateTo('chatbot.html');
+            } else {
+                alert('Please select both language and level');
+            }
+        }
+
+        function toggleChatbot() {
+            const messages = document.getElementById('chatbotMessages');
+            const minimizeIcon = document.getElementById('minimize-icon');
+            if (messages.classList.contains('hidden')) {
+                messages.classList.remove('hidden');
+                minimizeIcon.textContent = '−'; // Change icon to minus
+            } else {
+                messages.classList.add('hidden');
+                minimizeIcon.textContent = '+'; // Change icon to plus
+            }
+        }
+
+        function sendMessage () {
+            const input = document.getElementById('chatbotInput');
+            const message = input.value.trim();
+            if (message) {
+                const messagesContainer = document.getElementById('chatbotMessages');
+                const userMessage = document.createElement('div');
+                userMessage.className = 'message user-message';
+                userMessage.textContent = message;
+                messagesContainer.appendChild(userMessage);
+                input.value = ''; // Clear input after sending
+                // Here you can add the logic to handle the chatbot's response
+            }
+        }
+
+        function setActive(section) {
+            const links = document.querySelectorAll('.taskbar a');
+            links.forEach(link => {
+                link.classList.remove('active');
+            });
+            const activeLink = document.querySelector(`.taskbar a[onclick*="${section}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+            // Logic to navigate to the selected section can be added here
+            console.log(`Navigating to ${section}`);
+        }
+    </script>
+</body>
+</html>
